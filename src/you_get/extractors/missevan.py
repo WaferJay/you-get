@@ -183,7 +183,10 @@ class MissEvan(VideoExtractor):
     @__prepare_dispatcher.endpoint(
         re.compile(r'missevan\.com/sound/(?:player\?.*?id=)?(?P<sid>\d+)', re.I))
     def prepare_sound(self, sid, **kwargs):
+        log.e('sound_id: ' + repr(sid))
+        log.e('URL: ' + self.url_sound_api(sid))
         json_data = self._get_json(self.url_sound_api(sid))
+        log.e('Response: ' + repr(json_data))
         sound = json_data['info']['sound']
 
         self.title = sound['soundstr']
