@@ -318,6 +318,8 @@ class MissEvan(VideoExtractor):
             stream['size'] = urls_size(stream['src'])
 
     def _get_content(self, url, headers=None):
+        import time
+        time.sleep(5)
         copy_headers = self.__headers.copy()
         if headers:
             copy_headers.update(headers)
