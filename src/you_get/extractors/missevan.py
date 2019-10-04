@@ -183,17 +183,12 @@ class MissEvan(VideoExtractor):
     @__prepare_dispatcher.endpoint(
         re.compile(r'missevan\.com/sound/(?:player\?.*?id=)?(?P<sid>\d+)', re.I))
     def prepare_sound(self, sid, **kwargs):
-        import logging, time
+        import logging
         logging.getLogger().setLevel(logging.DEBUG)
 
-        log.e('sound_id: ' + repr(sid))
-        log.e('URL: ' + repr(self.url_sound_api(sid)))
-        json_data = self._get_json(self.url_sound_api(sid))
-        log.e('Response: ' + repr(json_data))
-        if not json_data['success']:
-            time.sleep(0.5)
-            json_data = self._get_json(self.url_sound_api(sid))
-
+        json_data = self._get_json(self.url_sound_api(sid), {
+            'Referer': 'https://www.missevan.com/sound/player?id=' + str(sid)
+        })
         sound = json_data['info']['sound']
 
         self.title = sound['soundstr']
@@ -322,11 +317,17 @@ class MissEvan(VideoExtractor):
         if 'size' not in stream:
             stream['size'] = urls_size(stream['src'])
 
-    def _get_content(self, url):
-        return get_content(url, headers=self.__headers)
+    def _get_content(self, url, headers=None):
+        copy_headers = self.__headers.copy()
+        if headers:
+            copy_headers.update(headers)
+        log.e('Headers: ' + repr(copy_headers))
+        return get_content(url, headers=copy_headers)
 
-    def _get_json(self, url):
-        content = self._get_content(url)
+    def _get_json(self, url, headers=None):
+        log.e('URL: ' + url)
+        content = self._get_content(url, headers)
+        log.e('Content: ' + content)
         return json.loads(content)
 
     @staticmethod
