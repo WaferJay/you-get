@@ -10,11 +10,7 @@ from you_get.extractors import (
 class YouGetTests(unittest.TestCase):
 
     def test_missevan(self):
-        missevan.download('https://m.missevan.com/sound/1285995', info_only=True)
-        missevan.download_playlist(
-            'https://www.missevan.com/albuminfo/57815', info_only=True)
-        missevan.download_playlist(
-            'https://www.missevan.com/mdrama/drama/18129', info_only=True)
+        missevan.download('https://m.missevan.com/sound/1039611', info_only=True)
 
 if __name__ == '__main__':
     unittest.main()
